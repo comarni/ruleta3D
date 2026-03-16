@@ -3,44 +3,91 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Three.js Demo 3D</title>
+  <title>Ruleta 3D — Spin the Wheel</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <!-- Contenedor principal del canvas 3D -->
+  <!-- ═══════════════════════════════════════════
+       CANVAS WebGL — Three.js lo inserta aquí
+  ═══════════════════════════════════════════ -->
   <div id="canvas-container"></div>
 
-  <!-- Interfaz de usuario superpuesta -->
-  <div id="ui-overlay">
-    <h1 class="title">Three.js Demo</h1>
-    <p class="subtitle">Arrastra para rotar &nbsp;·&nbsp; Scroll para zoom &nbsp;·&nbsp; Click para cambiar color</p>
-    <div id="color-indicator">
-      <span id="color-label">Color actual:</span>
-      <span id="color-swatch"></span>
+  <!-- ═══════════════════════════════════════════
+       SIDEBAR — Panel de gestión de nombres
+  ═══════════════════════════════════════════ -->
+  <aside id="sidebar">
+    <div id="sidebar-header">
+      <h2>🎰 Ruleta 3D</h2>
+      <p class="sidebar-sub">Configura tus participantes</p>
+    </div>
+
+    <!-- Formulario para añadir nombre -->
+    <div id="add-form">
+      <input
+        type="text"
+        id="name-input"
+        placeholder="Escribe un nombre…"
+        maxlength="24"
+        autocomplete="off"
+      />
+      <button id="btn-add" class="btn btn-add">＋ Añadir</button>
+    </div>
+
+    <!-- Lista de nombres actuales -->
+    <ul id="names-list"></ul>
+
+    <!-- Acciones de la lista -->
+    <div id="list-actions">
+      <button id="btn-reset" class="btn btn-ghost btn-sm">🗑 Vaciar lista</button>
+    </div>
+
+    <!-- Contador -->
+    <p id="count-label"><span id="count-num">0</span> participantes</p>
+  </aside>
+
+  <!-- ═══════════════════════════════════════════
+       BOTÓN PRINCIPAL — "Tirar ruleta"
+  ═══════════════════════════════════════════ -->
+  <div id="spin-btn-wrapper">
+    <button id="btn-spin" class="btn btn-spin">
+      <span id="spin-label">🎲 Tirar ruleta</span>
+    </button>
+  </div>
+
+  <!-- Marca de referencia (flecha/indicador arriba de la ruleta) -->
+  <div id="wheel-pointer">▼</div>
+
+  <!-- ═══════════════════════════════════════════
+       MODAL DE GANADOR
+  ═══════════════════════════════════════════ -->
+  <div id="winner-overlay" class="hidden">
+    <div id="winner-card">
+      <p class="winner-sub">🏆 ¡Ganador!</p>
+      <h1 id="winner-name">—</h1>
+      <button id="btn-close-winner" class="btn btn-spin" style="margin-top:1.5rem;">
+        ¡Volver a girar!
+      </button>
     </div>
   </div>
 
-  <!-- Panel de ayuda inferior -->
-  <div id="hint-panel">
-    <span>💡 Haz click sobre el cubo para cambiar de color</span>
+  <!-- Aviso si hay pocos nombres -->
+  <div id="toast" class="hidden">
+    <span id="toast-msg">Añade al menos 2 participantes</span>
   </div>
 
-  <!--
-    Three.js cargado desde CDN (importmap para módulos ES6).
-    Esto permite usar "import * from 'three'" sin bundler.
-  -->
+  <!-- ═══════════════════════════════════════════
+       Three.js via importmap (sin bundler)
+  ═══════════════════════════════════════════ -->
   <script type="importmap">
-    {
-      "imports": {
-        "three": "https://cdn.jsdelivr.net/npm/three@0.163.0/build/three.module.js",
-        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.163.0/examples/jsm/"
-      }
+  {
+    "imports": {
+      "three":          "https://cdn.jsdelivr.net/npm/three@0.163.0/build/three.module.js",
+      "three/addons/":  "https://cdn.jsdelivr.net/npm/three@0.163.0/examples/jsm/"
     }
+  }
   </script>
 
-  <!-- Módulo principal de la aplicación -->
   <script type="module" src="main.js"></script>
-
 </body>
 </html>

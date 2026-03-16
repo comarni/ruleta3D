@@ -1,7 +1,7 @@
-# Three.js Demo 3D
+# 🎰 Ruleta 3D — Spin the Wheel
 
-Proyecto de demostración interactiva 3D construido con **Three.js** puro (sin frameworks ni bundlers).
-Listo para abrirse localmente y publicarse en **GitHub Pages** sin configuración extra.
+Demo interactiva de ruleta tipo casino construida con **Three.js puro** (sin frameworks, sin bundler).
+Reemplaza herramientas como spinthewheel.io con una experiencia 3D inmersiva y personalizable.
 
 ---
 
@@ -9,14 +9,16 @@ Listo para abrirse localmente y publicarse en **GitHub Pages** sin configuració
 
 | Función | Detalle |
 |---|---|
-| Escena 3D | Cubo metálico con material PBR |
-| Iluminación | Ambiental + direccional + relleno + punto de acento |
-| Cámara | Perspectiva con OrbitControls |
-| Interacción ratón | Rotar · Zoom · Pan |
-| Click/Tap | Cambia el color del cubo (paleta de 8 colores) + animación de pulso |
-| Fondo | Campo de partículas (estrellas) + niebla volumétrica |
-| Responsive | Redimensiona correctamente en cualquier pantalla |
-| Sombras | PCFSoft shadow map |
+| Ruleta 3D | Disco metálico con sectores coloreados + separadores dorados |
+| Texto en sectores | Etiquetas canvas 2D proyectadas sobre cada sector |
+| Bola de ruleta | Órbita independiente, frena con la ruleta |
+| Animación de giro | Easing `easeOutBack` para efecto de inercia real |
+| Selección aleatoria | Uniforme (o ponderada con campo `weight`) |
+| UI lateral | Añadir / eliminar / resetear nombres en tiempo real |
+| Persistencia | Los nombres se guardan en `localStorage` |
+| Modal ganador | Overlay con nombre ganador + glow en el sector |
+| Iluminación | HemiLight + DirectionalLight + SpotLight de casino + PointLight |
+| Responsive | Sidebar lateral en desktop, panel inferior en móvil |
 
 ---
 
@@ -24,183 +26,133 @@ Listo para abrirse localmente y publicarse en **GitHub Pages** sin configuració
 
 ```
 threejs-demo/
-├── index.html   # Página principal, importa Three.js desde CDN via importmap
-├── style.css    # Estilos globales, UI overlay, responsive
-├── main.js      # Toda la lógica Three.js (escena, luces, objeto, animación)
-└── README.md    # Este archivo
+├── index.html   ← HTML con UI overlay completa
+├── style.css    ← Tema "casino futurista"
+├── main.js      ← Lógica Three.js completa (5 módulos)
+└── README.md    ← Este archivo
+```
+
+### Módulos dentro de `main.js`
+
+```
+① initScene      — renderer, cámara, luces, partículas, loop
+② rouletteModel  — createRoulette(), sectores, textos, bola
+③ rouletteLogic  — spinToIndex(), getRandomWinnerIndex(), easing
+④ itemsStore     — addItem(), removeItem(), localStorage
+⑤ ui             — DOM, eventos, rebuildRoulette(), modales
 ```
 
 ---
 
 ## Ejecutar localmente
 
-Abre el archivo `index.html` directamente en el navegador **no funciona** porque
-los módulos ES6 (`type="module"`) requieren un servidor HTTP.
+> `index.html` **no puede abrirse directamente** (necesita servidor HTTP para módulos ES6).
 
-### Opción A — VS Code Live Server (recomendado)
+### Opción A — VS Code + Live Server (recomendado)
+1. Instala la extensión **Live Server**.
+2. Click derecho sobre `index.html` → **Open with Live Server**.
+3. Abre `http://localhost:5500`.
 
-1. Instala la extensión **Live Server** en VS Code.
-2. Abre la carpeta `threejs-demo/` en VS Code.
-3. Click derecho sobre `index.html` → **Open with Live Server**.
-4. Se abrirá automáticamente en `http://localhost:5500`.
-
-### Opción B — Node.js (sin instalar nada extra)
-
+### Opción B — Node.js
 ```bash
 npx serve .
-# Abre http://localhost:3000
+# → http://localhost:3000
 ```
 
-### Opción C — Python
-
+### Opción C — Python 3
 ```bash
-# Python 3
 python -m http.server 8080
-# Abre http://localhost:8080
+# → http://localhost:8080
 ```
 
 ---
 
 ## Publicar en GitHub Pages
 
-### Paso 1 — Crear el repositorio
-
+### Paso 1 — Crear repositorio en GitHub
 1. Ve a [github.com/new](https://github.com/new).
-2. Pon un nombre, p. ej. `threejs-demo`.
-3. Deja el repositorio **público**.
-4. **No** marques "Initialize this repository with a README" (ya tenemos uno).
-5. Haz click en **Create repository**.
+2. Nombre: `ruleta-3d` (o el que prefieras).
+3. Visibilidad: **Público**.
+4. NO marques "Initialize with README".
+5. Clic en **Create repository**.
 
 ### Paso 2 — Subir el código
-
 ```bash
-# Entra en la carpeta del proyecto
 cd threejs-demo
 
-# Inicializa git (solo la primera vez)
 git init
 git add .
-git commit -m "feat: initial Three.js demo"
+git commit -m "feat: ruleta 3D casino con Three.js"
 
-# Conecta con tu repositorio de GitHub (sustituye <usuario> y <repo>)
-git remote add origin https://github.com/<usuario>/threejs-demo.git
-
-# Sube el código
+git remote add origin https://github.com/<tu-usuario>/ruleta-3d.git
 git push -u origin main
 ```
 
-> Si tu rama local se llama `master` en lugar de `main`, usa `git push -u origin master`.
-
 ### Paso 3 — Activar GitHub Pages
+1. En el repo: **Settings → Pages**.
+2. Source: **Deploy from a branch**.
+3. Branch: **main** / Folder: **/ (root)**.
+4. **Save**.
 
-1. En el repositorio de GitHub ve a **Settings → Pages**.
-2. En *Source* selecciona **Deploy from a branch**.
-3. Rama: **main** (o master) / carpeta: **/ (root)**.
-4. Haz click en **Save**.
-
-En menos de un minuto tu demo estará disponible en:
-
+Tu ruleta estará en:
 ```
-https://<tu-usuario>.github.io/threejs-demo/
+https://<tu-usuario>.github.io/ruleta-3d/
 ```
-
-> GitHub Pages sirve los archivos estáticos con un servidor HTTP, por lo que
-> los módulos ES6 funcionan sin problemas.
 
 ---
 
-## Sustituir el cubo por un modelo GLB de Blender
+## Personalización
 
-### Exportar desde Blender
-
-1. Abre tu modelo en Blender.
-2. **File → Export → glTF 2.0 (.glb/.gltf)**.
-3. En el panel de exportación:
-   - Format: **GLB** (binario, un solo archivo).
-   - Activa: *Selected Objects* si quieres exportar solo lo seleccionado.
-   - Activa: *Apply Modifiers* para que los modificadores se apliquen.
-4. Guarda el archivo como `model.glb` dentro de la carpeta `threejs-demo/`.
-
-### Adaptar el código en `main.js`
-
-1. **Descomenta** la importación del `GLTFLoader` al inicio del archivo:
-
+### Cambiar colores de los sectores
+En `main.js`, array `SECTOR_COLORS`:
 ```js
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+const SECTOR_COLORS = [
+  0xc0392b, 0x1a5276, 0x1e8449, // ... añade o cambia colores hex
+];
 ```
 
-2. **Elimina** (o comenta) el bloque del cubo:
-
+### Cambiar velocidad y duración del giro
+En el evento del botón "Tirar ruleta":
 ```js
-// const geometry = new THREE.BoxGeometry(...)
-// const material = new THREE.MeshStandardMaterial(...)
-// const cube = new THREE.Mesh(geometry, material)
-// scene.add(cube)
-// ...
-```
-
-3. **Añade** el loader en su lugar:
-
-```js
-const loader = new GLTFLoader();
-let model;
-
-loader.load('./model.glb', (gltf) => {
-  model = gltf.scene;
-
-  // Activar sombras en todos los meshes del modelo
-  model.traverse((node) => {
-    if (node.isMesh) {
-      node.castShadow    = true;
-      node.receiveShadow = true;
-    }
-  });
-
-  scene.add(model);
+spinToIndex(roulette, winnerIdx, items, {
+  duration:        5800,   // ms → más alto = giro más largo
+  extraRotations:  7,      // más vueltas antes de carar
 });
 ```
 
-4. En el loop de animación, cambia la referencia al cubo:
-
+### Añadir pesos (probabilidades diferentes)
+Los items admiten un campo `weight` opcional:
 ```js
-// Antes:
-cube.rotation.y += delta * 0.35;
+items = [
+  { label: 'Alice', weight: 3 },  // 3x más probable
+  { label: 'Bob',   weight: 1 },
+  { label: 'Carol', weight: 2 },
+];
+```
+La función `getRandomWinnerIndex` lo detecta automáticamente.
 
-// Después:
-if (model) model.rotation.y += delta * 0.35;
+### Cambiar tamaño de la ruleta
+En `createRoulette()`:
+```js
+const RADIUS    = 4.0;   // radio del disco (unidades Three.js)
+const THICKNESS = 0.55;  // altura del cilindro
 ```
 
-5. Para el **raycasting** (detección de clicks):
-
+### Cambiar la cámara
 ```js
-// Antes:
-const intersects = raycaster.intersectObject(cube);
-
-// Después:
-const intersects = raycaster.intersectObject(model, true); // true = busca en hijos
+camera.position.set(0, 6.5, 11); // x, y (altura), z (distancia)
+camera.fov = 52;                  // campo de visión
 ```
-
----
-
-## Personalización rápida
-
-| Qué cambiar | Dónde | Cómo |
-|---|---|---|
-| Colores de la paleta | `main.js` | Array `COLOR_PALETTE` |
-| Velocidad de rotación | `main.js` | `delta * 0.35` → aumenta/disminuye el multiplicador |
-| Geometría del objeto | `main.js` | Cambia `BoxGeometry` por `SphereGeometry`, `TorusKnotGeometry`, etc. |
-| Intensidad de luces | `main.js` | Segundo parámetro de cada `DirectionalLight` / `PointLight` |
-| Colores de luces | `main.js` | Primer parámetro hexadecimal de cada luz |
-| Fondo CSS | `style.css` | `background` en `#canvas-container` |
-| Niebla | `main.js` | `scene.fog = new THREE.FogExp2(color, densidad)` |
 
 ---
 
 ## Tecnologías usadas
 
 - [Three.js r163](https://threejs.org/) — motor 3D WebGL
-- [OrbitControls](https://threejs.org/docs/#examples/en/controls/OrbitControls) — control de cámara con ratón/touch
-- HTML5 · CSS3 · ES2022 Modules — sin frameworks ni bundlers
+- [OrbitControls](https://threejs.org/docs/#examples/en/controls/OrbitControls) — control de cámara
+- Canvas 2D API — textos en los sectores (`CanvasTexture`)
+- `localStorage` — persistencia de participantes
+- HTML5 · CSS3 · ES2022 Modules — sin bundler ni frameworks
 
 ---
 
